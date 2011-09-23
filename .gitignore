@@ -106,4 +106,3 @@ scripts/kallsyms
 scripts/kconfig/conf
 scripts/mod/modpost
 usr/.initramfs_data.cpio.d
-kernel/config_data.h
