@@ -1020,10 +1020,10 @@ int s5k4ecgx_set_af(char value)
 			CAMDRV_DEBUG("%s : EXT_CFG_AF_SET_NORMAL \n", __func__);
 			S5K4ECGX_WRITE_LIST(s5k4ecgx_AF_Normal_mode_1);
 			if(s5k4ecgx_status.scene == EXT_CFG_SCENE_NIGHTSHOT)mdelay(250);
-			else mdelay(100);
+			else mdelay(200);
 			S5K4ECGX_WRITE_LIST(s5k4ecgx_AF_Normal_mode_2);
 			if(s5k4ecgx_status.scene == EXT_CFG_SCENE_NIGHTSHOT)mdelay(250);
-			else mdelay(100);
+			else mdelay(200);
 			if(s5k4ecgx_status.scene != EXT_CFG_SCENE_NIGHTSHOT)S5K4ECGX_WRITE_LIST(s5k4ecgx_AF_Normal_mode_3);
 		break;
 		case EXT_CFG_AF_SET_MACRO :
@@ -1035,6 +1035,7 @@ int s5k4ecgx_set_af(char value)
 			if(s5k4ecgx_status.scene == EXT_CFG_SCENE_NIGHTSHOT)mdelay(250);
 			else mdelay(100);
 			if(s5k4ecgx_status.scene != EXT_CFG_SCENE_NIGHTSHOT)S5K4ECGX_WRITE_LIST(s5k4ecgx_AF_Macro_mode_3);
+			mdelay(200);
 		break;
 		case EXT_CFG_AF_OFF :
 			CAMDRV_DEBUG("%s : EXT_CFG_AF_OFF (afmode:%d)\n", __func__,s5k4ecgx_status.afmode);

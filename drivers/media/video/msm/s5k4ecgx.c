@@ -89,6 +89,7 @@ struct s5k4ecgx_status_struct {
 	char iso;
 	char auto_exposure;
 	char scene;
+	char fps; 
 	char afmode;
 	char afcanceled;
 	char dtp;
@@ -818,6 +819,38 @@ void s5k4ecgx_set_jpeg_quality(char value)
 	}
 }
 
+void s5k4ecgx_set_fps(char value)
+{
+	switch(value)
+	{
+		case PCAM_FRAME_AUTO :
+			//S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_15);
+		break;
+		case PCAM_FRAME_FIX_15 :
+			S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_15);
+		break;
+		case PCAM_FRAME_FIX_20 :
+			S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_20);
+			msleep(100); /*delay for pclk stabilization (noframe issue) 2011-01-20 */
+		break;
+		case PCAM_FRAME_FIX_24 :
+			S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_24);
+			msleep(100); /*delay for pclk stabilization (noframe issue) 2011-01-20 */
+		break;
+		case PCAM_FRAME_FIX_25 :
+			S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_25);
+			msleep(100); /*delay for pclk stabilization (noframe issue) 2011-01-20 */
+		break;
+		case PCAM_FRAME_FIX_30 :
+			S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_30);
+			msleep(100); /*delay for pclk stabilization (noframe issue) 2011-01-20 */
+		break;
+		default :
+			printk("[S5K4ECGX]Unexpected EXT_CFG_FRAME_CONTROL mode : %d\n", value);
+		break;
+	}
+}
+
 static int s5k4ecgx_get_lux(int* lux)
 {
 	int msb = 0;
@@ -1380,21 +1413,38 @@ void sensor_rough_control(void __user *arg)
 		}
 		break;
 		case PCAM_FRAME_CONTROL:
+			s5k4ecgx_status.fps = ctrl_info.value_1;
+			if(!s5k4ecgx_status.camera_initailized)
+				s5k4ecgx_status.need_configuration |= CHECK_FPS;
+			else
+				s5k4ecgx_set_fps(s5k4ecgx_status.fps);
+		break;
+			/*
 			switch(ctrl_info.value_1)
 			{
 				case PCAM_FRAME_AUTO :
 				//S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_15);
 				break;
-				case PCAM_FRAME_FIX_30 :
+				case PCAM_FRAME_FIX_15 :
+					S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_15);
+					msleep(100);
+					printk("FIX 15 : fps = %d\n");					
+				break;
+				case PCAM_FRAME_FIX_24 :
 					S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_24);
 					msleep(100);
-					printk("msleep 100ms ~~~~~~~\n");					
+					printk("FIX 24 : fps = %d\n");					
+				break;
+				case PCAM_FRAME_FIX_30 :
+					S5K4ECGX_WRITE_LIST(s5k4ecgx_FPS_30);
+					msleep(100);
+					printk("FIX 30 : fps = %d\n");						
 				break;
 				default :
 					printk("[S5K4ECGX]Unexpected PCAM_FRAME_CONTROL mode : %d\n", ctrl_info.value_1);
 				break;
-			}
-		break;
+			} */
+
 		case PCAM_AF_CONTROL:
 			if(ctrl_info.value_1 ==  2|| ctrl_info.value_1 == 3)s5k4ecgx_status.afmode= ctrl_info.value_1;
 			if(!s5k4ecgx_status.camera_initailized)

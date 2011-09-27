@@ -931,8 +931,8 @@ msmsdcc_irq(int irq, void *dev_id)
 						mmc_hostname(host->mmc));
 				host->dummy_52_state = DUMMY_52_STATE_NONE;
 				host->curr.cmd = NULL;
-				spin_unlock(&host->lock);
 				msmsdcc_request_start(host, host->curr.mrq);
+				spin_unlock(&host->lock);
 				return IRQ_HANDLED;
 			}
 			break;

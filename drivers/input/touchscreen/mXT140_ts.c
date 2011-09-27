@@ -3477,7 +3477,7 @@ int qt602240_i2c_write(u16 reg, u8 *read_val, unsigned int len)
 	if ( ret < 0 )
 	{
 		printk("[TSP] Error code : %d\n", __LINE__ );
-///		touch_hw_rst( 5 );  // TOUCH HW RESET No.5
+		touch_hw_rst( 5 );  // TOUCH HW RESET No.5
 		return -1;
 	}
 

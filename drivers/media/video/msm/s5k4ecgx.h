@@ -69,9 +69,15 @@
 #define PCAM_AUTO_CONTRAST_ON 0
 #define PCAM_AUTO_CONTRAST_OFF 1
 
+/////////BENI /////////
 #define PCAM_FRAME_AUTO			0
-#define PCAM_FRAME_FIX_15		1
-#define PCAM_FRAME_FIX_30		2
+#define PCAM_FRAME_FIX_15		15
+#define PCAM_FRAME_FIX_20		20
+#define PCAM_FRAME_FIX_24		24
+#define PCAM_FRAME_FIX_25		25
+#define PCAM_FRAME_FIX_30		30
+///////////////////////
+
 
 #define PCAM_EFFECT_NORMAL		0
 #define PCAM_EFFECT_NEGATIVE		1

@@ -48,6 +48,10 @@
 
 #define DMA_P_BASE      0x90000
 
+#if defined(CONFIG_MACH_COOPER)
+extern int lcd_type_smd;
+#endif
+
 extern spinlock_t mdp_spin_lock;
 #ifndef CONFIG_FB_MSM_MDP40
 extern uint32 mdp_intr_mask;
@@ -350,6 +354,11 @@ int mdp_lcdc_off(struct platform_device *pdev)
 	}
 #endif
 
+#if defined(CONFIG_MACH_COOPER) 
+	if( lcd_type_smd )
+		ret = panel_next_off(pdev);
+#endif
+
 	/* MDP cmd block enable */
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
 	MDP_OUTP(MDP_BASE + timer_base, 0);
@@ -359,7 +368,12 @@ int mdp_lcdc_off(struct platform_device *pdev)
 
 	printk("[HSIL] %s(%d)  mdp_lcdc_off end\n", __func__, __LINE__);
 
+#if defined(CONFIG_MACH_COOPER)
+	if( lcd_type_smd == 0 )
+		ret = panel_next_off(pdev);
+#else
 	ret = panel_next_off(pdev);
+#endif
 
 	/* delay to make sure the last frame finishes */
 	msleep(16);

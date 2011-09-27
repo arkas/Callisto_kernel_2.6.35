@@ -2516,8 +2516,11 @@ struct vreg *vwlan_3_3v;
  {
    gpio_set_value(VDD_WLAN_EN, 0);  /* VDD_WLAN_EN Disable */ 
   /* power off for sleep current */
-  vreg_disable(vwlan_3_3v);
-  vreg_disable(vwlan_1_8v);
+  
+  /* Because happened sleep current issue in TSTC when checked TASS Froyo version,
+     disable code is blocked only Tass, Beni, Bennett - There have same problem*/  
+  //vreg_disable(vwlan_3_3v);
+  //vreg_disable(vwlan_1_8v);
  }
 }
 
