@@ -308,10 +308,6 @@
 
 static const char fsg_string_interface[] = "Mass Storage";
 
-#ifdef CONFIG_USB_CSW_HACK
-static int write_error_after_csw_sent;
-static int csw_hack_sent;
-#endif
 
 #define FSG_NO_INTR_EP 1
 #define FSG_NO_DEVICE_STRINGS    1
@@ -886,6 +882,7 @@ static int do_write(struct fsg_common *common)
 	int			rc;
 
 #ifdef CONFIG_USB_CSW_HACK
+	int			csw_hack_sent = 0;
 	int			i;
 #endif
 	if (curlun->ro) {
@@ -2723,10 +2720,11 @@ static int fsg_main_thread(void *common_)
 		 * need to skip sending status once again if it is a
 		 * write scsi command.
 		 */
-if (csw_hack_sent) {
-      csw_hack_sent = 0;
+		if (!(write_error_after_csw_sent) &&
+			(common->cmnd[0] == SC_WRITE_6
+			|| common->cmnd[0] == SC_WRITE_10
+			|| common->cmnd[0] == SC_WRITE_12))
 			continue;
-		}
 #endif
 		if (send_status(common))
 			continue;
