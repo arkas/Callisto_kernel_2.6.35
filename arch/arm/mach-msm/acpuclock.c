@@ -17,8 +17,6 @@
  *
  */
 
-#define OVERCLOCK_AHB
-
 #include <linux/version.h>
 #include <linux/kernel.h>
 #include <linux/init.h>
@@ -211,8 +209,8 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_1200[] = {
 	{ 1, 320000, ACPU_PLL_0, 4, 2, 160000, 1, 5, 122880 },
 	{ 0, 400000, ACPU_PLL_2, 2, 2, 133333, 2, 5, 122880 },
 	{ 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 122880 },
-	{ 1, 600000, ACPU_PLL_2, 2, 1, 200000, 2, 6, 122880 },
-#ifndef OVERCLOCK_AHB
+	{ 1, 600000, ACPU_PLL_2, 2, 1, 200000, 2, 7, 200000 },
+#ifndef CONFIG_MSM_CPU_FREQ_OVERCLOCK_AHB
 /* Conservative AHB overclocking */
 	{ 1, 652800, ACPU_PLL_0, 4, 0, 217600, 2, 7, 200000 },
 	{ 1, 672000, ACPU_PLL_0, 4, 0, 224000, 2, 7, 200000 },
@@ -222,8 +220,8 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_1200[] = {
 	{ 1, 748800, ACPU_PLL_0, 4, 0, 249600, 2, 7, 200000 },
 	{ 1, 768000, ACPU_PLL_0, 4, 0, 256000, 2, 7, 200000 },
 	{ 1, 787200, ACPU_PLL_0, 4, 0, 262400, 2, 7, 200000 },
-	{ 1, 800000, ACPU_PLL_0, 4, 0, 266667, 2, 7, 200000 },
-	{ 1, 825600, ACPU_PLL_0, 4, 0, 275200, 2, 7, 200000 },
+	{ 1, 806400, ACPU_PLL_0, 4, 0, 268800, 2, 7, 200000 },
+//	{ 1, 825600, ACPU_PLL_0, 4, 0, 275200, 2, 7, 200000 },
 //	{ 1, 844800, ACPU_PLL_0, 4, 0, 281600, 2, 7, 200000 },
 #else
 /* Agressive AHB overclocking */
@@ -235,10 +233,10 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_1200[] = {
 	{ 1, 748800, ACPU_PLL_0, 4, 0, 374400, 1, 7, 200000 },
 	{ 1, 768000, ACPU_PLL_0, 4, 0, 384000, 1, 7, 200000 },
 	{ 1, 787200, ACPU_PLL_0, 4, 0, 393600, 1, 7, 200000 },
-	{ 1, 800000, ACPU_PLL_0, 4, 0, 400000, 1, 7, 200000 },
-	{ 1, 825600, ACPU_PLL_0, 4, 0, 412800, 1, 7, 200000 },
+	{ 1, 806400, ACPU_PLL_0, 4, 0, 403200, 1, 7, 200000 },,
+//	{ 1, 825600, ACPU_PLL_0, 4, 0, 412800, 1, 7, 200000 },
 //	{ 1, 844800, ACPU_PLL_0, 4, 0, 422400, 1, 7, 200000 },
-#endif
+#endif /* CONFIG_MSM_CPU_FREQ_OVERCLOCK_AHB */
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
 };
 
