@@ -722,8 +722,8 @@ static int __init cpufreq_savagedzen_init(void)
         }
 
         /* Scale up is high priority */
-        up_wq = create_rt_workqueue("ksavagedzen_up");
-	down_wq = create_rt_workqueue("ksavagedzen_down");
+        up_wq = alloc_workqueue("ksavagedzen_up", WQ_HIGHPRI | WQ_CPU_INTENSIVE, 1);
+	down_wq = create_workqueue("ksavagedzen_down");
 
         INIT_WORK(&freq_scale_work, cpufreq_savagedzen_freq_change_time_work);
 

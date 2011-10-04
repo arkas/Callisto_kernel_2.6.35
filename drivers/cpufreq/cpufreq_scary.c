@@ -715,7 +715,7 @@ static int __init cpufreq_gov_dbs_init(void)
 {
 	int err;
 
-	kconservative_wq = create_rt_workqueue("kconservative");
+	kconservative_wq = alloc_workqueue("kconservative", WQ_HIGHPRI | WQ_CPU_INTENSIVE, 1);
 	if (!kconservative_wq) {
 		printk(KERN_ERR "Creation of kconservative failed\n");
 		return -EFAULT;
