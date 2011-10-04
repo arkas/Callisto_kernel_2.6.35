@@ -56,7 +56,9 @@
 #include <mach/msm_tsif.h>
 #include <mach/socinfo.h>
 
+#include <linux/mtd/mtd.h>
 #include <linux/mtd/nand.h>
+#include <linux/mtd/onenand.h>
 #include <linux/mtd/partitions.h>
 #include <linux/i2c.h>
 #include <linux/android_pmem.h>
@@ -1898,6 +1900,128 @@ static struct platform_device fsa9280_i2c_gpio_device = {
 	},
 };
 
+/*ONENAND DRIVER FOR CALLISTO BY WILLINGMAGIC USING ONENAND GENERIC DRIVER*/
+
+static struct mtd_partition callisto_partitions[] = {
+	[0] = {
+		.name		= "mibib",
+		.size		= SZ_1M+SZ_512K,
+		.offset		= 0x00000000,
+		.mask_flags	= MTD_WRITEABLE,
+	},
+	[1] = {
+		.name		= "qcsbl",
+		.size		= SZ_512K,
+		.offset		= 0x00180000,
+		.mask_flags	= MTD_WRITEABLE,
+	},
+	[2] = {
+		.name		= "oemsbl",
+		.size		= SZ_512K + SZ_256K,
+		.offset		= 0x00200000,
+		.mask_flags	= MTD_WRITEABLE,
+	},
+	[3] = {
+		.name		= "amss",
+		.size		= SZ_16M + SZ_8M + SZ_1M,
+		.offset		= 0x002c0000,
+		.mask_flags	= MTD_WRITEABLE,
+	},
+	[4] = {
+		.name		= "efs",
+		.size		= SZ_16M + SZ_8M + SZ_256K,
+		.offset		= 0x01bc0000,
+		.mask_flags	= MTD_WRITEABLE,
+	},
+	[5] = {
+		.name		= "??",
+		.size		= SZ_4M + SZ_1M,
+		.offset		= 0x03400000,
+		.mask_flags	= MTD_WRITEABLE,
+	},
+	[6] = {
+		.name		= "param",
+		.size		= SZ_16M + SZ_8M + SZ_1M,
+		.offset		= 0x03900000,
+		.mask_flags	= MTD_WRITEABLE,
+	},
+	[7] = {
+		.name		= "arm11boot",
+		.size		= SZ_2M,
+		.offset		= 0x05200000,
+		.mask_flags	= MTD_WRITEABLE,
+	},
+	[8] = {
+		.name		= "boot.img",
+		.size		= SZ_8M + SZ_2M,
+		.offset		= 0x05400000,
+	},
+	[9] = {
+		.name		= "recovery",
+		.size		= SZ_8M + SZ_2M,
+		.offset		= 0x05e00000,
+	},
+	[10] = {
+		.name		= "modem??",
+		.size		=  SZ_512K + SZ_256K,
+		.offset		= 0x06800000,
+	},
+	[11] = {
+		.name		= "system",
+		.size		= SZ_128M + SZ_32M + SZ_16M + SZ_8M + SZ_4M + SZ_2M + SZ_1M + SZ_256K,
+		.offset		= 0x068c0000,
+
+	},
+	[12] = {
+		.name		= "data",
+		.size		= SZ_128M + SZ_32M + SZ_16M + SZ_4M,
+		.offset		= 0x12800000,
+
+	},
+	[13] = {
+		.name		= "cache",
+		.size		= SZ_16M + SZ_8M + SZ_1M,
+		.offset		= 0x1dc00000,
+	},
+};
+
+
+static struct onenand_platform_data callisto_flash_data = {
+	.parts		= callisto_partitions,
+	.nr_parts	= ARRAY_SIZE(callisto_partitions),
+};
+
+static struct resource callisto_flash_resource[] = {
+	[0] = {
+		.flags		= IORESOURCE_MEM,
+	},
+};
+
+static struct platform_device callisto_onenand_device = {
+	.name		= "onenand-flash",
+	.id		= -1,
+	.dev		= {
+		.platform_data	= &callisto_flash_data,
+	},
+	.num_resources	= ARRAY_SIZE(callisto_flash_resource),
+	.resource	= callisto_flash_resource,
+};
+
+static void __init callisto_flash_init(void)
+{
+	unsigned long base=0xA0A00000;
+
+	
+	callisto_flash_resource[0].start = base;
+	callisto_flash_resource[0].end   = base + SZ_128K - 1;
+}
+
+
+
+
+
+
+
 static struct platform_device *devices[] __initdata = {
 #if !defined(CONFIG_MSM_SERIAL_DEBUGGER)
 #if !defined(CONFIG_MSM_ARM9_USES_UART3)
@@ -1906,7 +2030,7 @@ static struct platform_device *devices[] __initdata = {
 #endif
 	&msm_device_smd,
 	&msm_device_dmov,
-	&msm_device_nand,
+	&callisto_onenand_device,
 
 #ifdef CONFIG_USB_MSM_OTG_72K
 	&msm_device_otg,
