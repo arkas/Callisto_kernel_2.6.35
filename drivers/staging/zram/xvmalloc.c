@@ -188,8 +188,13 @@ static void insert_block(struct xv_pool *pool, struct page *page, u32 offset,
 	u32 flindex, slindex;
 	struct block_header *nextblock;
 
-	slindex = get_index_for_insert(block->size);
-	flindex = slindex / BITS_PER_LONG;
+	if (block->size >= (PAGE_SIZE - XV_ALIGN)) {
+		slindex = pagesize_slindex;
+		flindex = pagesize_flindex;
+	} else {
+		slindex = get_index_for_insert(block->size);
+		flindex = slindex / BITS_PER_LONG;
+	}
 
 	block->link.prev_page = NULL;
 	block->link.prev_offset = 0;
@@ -310,6 +315,10 @@ struct xv_pool *xv_create_pool(void)
 	pool = kzalloc(ovhd_size, GFP_KERNEL);
 	if (!pool)
 		return NULL;
+		
+	/* cache the first/second-level indices for PAGE_SIZE allocations */
+	pagesize_slindex = get_index_for_insert(PAGE_SIZE);
+	pagesize_flindex = pagesize_slindex / BITS_PER_LONG;
 
 	spin_lock_init(&pool->lock);
 

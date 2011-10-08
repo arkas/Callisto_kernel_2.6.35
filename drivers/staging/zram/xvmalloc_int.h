@@ -50,6 +50,10 @@
 
 /* End of user params */
 
+/* Cache of the first/second-level indices for PAGE_SIZE allocations */
+static u32 pagesize_slindex;
+static u32 pagesize_flindex;
+
 enum blockflags {
 	BLOCK_FREE,
 	PREV_FREE,
