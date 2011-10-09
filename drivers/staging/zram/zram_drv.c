@@ -294,8 +294,7 @@ static int zram_read(struct zram *zram, struct bio *bio)
 		user_mem = kmap_atomic(page, KM_USER0);
 		clen = PAGE_SIZE;
 
-		cmem = kmap_atomic(zram->table[index].page, KM_USER1) +
-				zram->table[index].offset;
+		cmem = kmap_atomic(zram->table[index].page, KM_USER1);
 
 		ret = DECOMPRESS(
 			cmem + sizeof(*zheader),
